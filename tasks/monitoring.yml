@@ -1,0 +1,43 @@
+- include_role:
+    name: geerlingguy.docker
+
+- name: Install python dependencies
+  package:
+    name:
+      - python3
+      - python3-pip
+      - python3-setuptools
+    state: present
+
+- name: Make sure docker python module is installed
+  pip:
+    name: "docker, docker-compose"
+
+- name: Create the needed directory structure
+  file:
+    path: "{{ workdir }}"
+    state: directory
+    mode: 0600
+  changed_when: false
+
+- name: Copy docker-compose
+  template:
+    src: "{{ playbook_dir }}/files/docker-compose.yml"
+    dest: "{{ workdir }}/docker-compose.yml"
+  register: deploy_file
+
+- name: Create the directory structure for Prometheus
+  file:
+    path: "{{ workdir }}/.prometheus"
+    state: directory
+
+- name: Copy the prometheus config
+  template:
+    src: "{{ playbook_dir }}/files/prometheus/prometheus.yml"
+    dest: "{{ workdir }}/.prometheus/prometheus.yml"
+
+- name: Upgrade the containers and run `docker-compose up`
+  community.general.docker_compose:
+    project_src: "{{ workdir }}"
+    pull: true
+    remove_orphans: true
