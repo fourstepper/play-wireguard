@@ -1,5 +1,8 @@
 ---
-- hosts: all
+- hosts: vpn.srv.quest
+  vars_files:
+    - "vars/credentials.yml"
+    - "vars/main.yml"
   pre_tasks:
     - name: Update cache for Debian-based distros
       apt:
@@ -13,7 +16,13 @@
         sysctl_set: yes
         sysctl_file: /etc/sysctl.d/ip_forward.conf
 
-- hosts: vpn_home
+    - name: Include tasks for monitoring
+      include_tasks: tasks/monitoring.yml
+      tags: setup-monitoring
+
   roles:
     - ansible-role-fail2ban
+
+- hosts: vpn_home
+  roles:
     - githubixx.ansible_role_wireguard

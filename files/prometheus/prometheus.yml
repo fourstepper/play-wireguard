@@ -1,0 +1,11 @@
+remote_write:
+  - url: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom/push
+    basic_auth:
+      username: "194491"
+      password: "{{ prometheus_remote_write_password }}"
+scrape_configs:
+  - job_name: vpn.srv.quest
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - node_exporter:9100
