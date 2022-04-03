@@ -1,5 +1,5 @@
 - src: githubixx.ansible_role_wireguard
-  version: 9.0.1
+  version: 9.1.0
 
 - src: git@github.com:fourstepper/ansible-role-fail2ban.git
   scm: git
