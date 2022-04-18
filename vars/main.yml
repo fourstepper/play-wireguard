@@ -1,1 +1,2 @@
 workdir: "/deploy/monitoring"
+ansible_public_keys_path: "files/public_keys"

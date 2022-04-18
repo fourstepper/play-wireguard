@@ -1,5 +1,5 @@
 ---
-- hosts: vpn.srv.quest
+- hosts: vpn.robinopletal.com
   vars_files:
     - "vars/credentials.yml"
     - "vars/main.yml"
@@ -9,6 +9,13 @@
         update_cache: true
       when: ansible_facts['os_family'] == 'Debian'
       changed_when: false
+
+    - name: Manage authorized SSH keys
+      authorized_key:
+        exclusive: yes
+        user: root
+        key: "{{ item }}"
+      with_file: "{{ ansible_public_keys_path }}"
 
     - ansible.posix.sysctl:
         name: net.ipv4.ip_forward
